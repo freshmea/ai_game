@@ -1,7 +1,8 @@
 import pygame
 
-# from snake import Food, Settings, Snake
-from snake import Food, Settings, Snake
+from .food import Food
+from .settings import Settings
+from .snake import Snake
 
 
 class Game:
@@ -10,7 +11,7 @@ class Game:
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Snake Game")
-        self.snake = Snake(self)
+        self.snake = Snake(self.settings, self.screen)
         self.foods = pygame.sprite.Group()
         for _ in range(10):
             self.foods.add(Food(self))

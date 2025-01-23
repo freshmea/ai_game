@@ -3,9 +3,10 @@ from pygame.sprite import Sprite
 
 
 class Snake(Sprite):
-    def __init__(self, game):
+    def __init__(self, settings, screen):
         super().__init__()
-        self.game = game
+        self.settings = settings
+        self.screen = screen
         self.image = pygame.Surface((20, 20))
         self.image.fill((0, 255, 0))
         self.rect = self.image.get_rect()
@@ -25,14 +26,14 @@ class Snake(Sprite):
             head.y += 20
 
         # 화면을 벗어나면 반대쪽에서 나오게 함
-        if head.x >= self.game.settings.screen_width:
+        if head.x >= self.settings.screen_width:
             head.x = 0
         elif head.x < 0:
-            head.x = self.game.settings.screen_width - 20
-        elif head.y >= self.game.settings.screen_height:
+            head.x = self.settings.screen_width - 20
+        elif head.y >= self.settings.screen_height:
             head.y = 0
         elif head.y < 0:
-            head.y = self.game.settings.screen_height - 20
+            head.y = self.settings.screen_height - 20
 
         self.segments = [head] + self.segments[:-1]
         self.rect = self.segments[0]
@@ -52,4 +53,4 @@ class Snake(Sprite):
 
     def draw(self):
         for segment in self.segments:
-            pygame.draw.rect(self.game.screen, (0, 255, 0), segment)
+            pygame.draw.rect(self.screen, (0, 255, 0), segment)

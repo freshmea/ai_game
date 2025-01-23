@@ -3,4 +3,4 @@ from .game import Game
 from .settings import Settings
 from .snake import Snake
 
-__all__ = ['game', 'settings', 'snake', 'food']
+__all__ = ['Food', 'Settings', 'Snake', 'Game']
