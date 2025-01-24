@@ -1,8 +1,12 @@
-# add path to the snake package
+import os
 import sys
-sys.path.append('C:\Users\Administrator\Documents\ai_game\src\snake')
 
-from snake.settings import Settings
+import pytest
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from snake import Settings
+
 
 def test_initial_settings():
     """
