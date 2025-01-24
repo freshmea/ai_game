@@ -8,15 +8,12 @@
 ai_game/
 │
 ├── src/
+│   ├── main.py          # 게임의 진입점
 │   └── snake/
-│       ├── main.py          # 게임의 진입점
 │       ├── game.py          # 게임 로직
 │       ├── snake.py         # 지렁이(뱀) 클래스
 │       ├── food.py          # 음식 클래스
 │       └── settings.py      # 게임 설정
-├── sound/                   # 사운드 파일
-├── image/                   # 이미지 파일
-├── data/                    # 데이터 파일
 └── README.md                # 프로젝트 설명 파일
 ```
 
@@ -34,7 +31,7 @@ ai_game/
 ## 실행 방법
 1. 프로젝트 디렉토리로 이동합니다:
     ```
-    cd /c:/Users/Administrator/Documents/ai_game/src/snake
+    cd src
     ```
 2. 게임을 실행합니다:
     ```
@@ -46,12 +43,5 @@ ai_game/
 - 지렁이가 음식을 먹으면 길이가 길어집니다.
 - 지렁이가 벽이나 자기 자신과 충돌하면 게임이 종료됩니다.
 
-## 기술 스택
-- Python 3.x
-- Pygame
-- sphinx
-- pytest
-- copilot
-
 ## 버전
-- 0.0.3
+- 0.0.1
