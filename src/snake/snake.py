@@ -3,7 +3,17 @@ from pygame.sprite import Sprite
 
 
 class Snake(Sprite):
+    """
+    Snake 클래스는 뱀의 속성 및 동작을 정의합니다.
+    """
     def __init__(self, settings, screen):
+        """
+        Snake 객체를 초기화합니다.
+
+        매개변수:
+        settings (Settings): 게임 설정 객체
+        screen (pygame.Surface): 게임 화면 객체
+        """
         super().__init__()
         self.settings = settings
         self.screen = screen
@@ -15,6 +25,9 @@ class Snake(Sprite):
         self.direction = pygame.K_RIGHT
 
     def update(self, *args, **kwargs):
+        """
+        뱀의 위치를 업데이트합니다.
+        """
         head = self.rect.copy()
         if self.direction == pygame.K_RIGHT:
             head.x += 20
@@ -39,6 +52,12 @@ class Snake(Sprite):
         self.rect = self.segments[0]
 
     def change_direction(self, key):
+        """
+        뱀의 이동 방향을 변경합니다.
+
+        매개변수:
+        key (int): 방향키 값
+        """
         if key == pygame.K_w and self.direction != pygame.K_DOWN:
             self.direction = pygame.K_UP
         elif key == pygame.K_a and self.direction != pygame.K_RIGHT:
@@ -49,8 +68,14 @@ class Snake(Sprite):
             self.direction = pygame.K_RIGHT
 
     def grow(self):
+        """
+        뱀의 길이를 증가시킵니다.
+        """
         self.segments.append(self.segments[-1].copy())
 
     def draw(self):
+        """
+        뱀을 화면에 그립니다.
+        """
         for segment in self.segments:
             pygame.draw.rect(self.screen, (0, 255, 0), segment)
