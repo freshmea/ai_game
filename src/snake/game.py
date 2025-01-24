@@ -6,7 +6,13 @@ from .snake import Snake
 
 
 class Game:
+    """
+    Game 클래스는 게임의 주요 로직을 정의합니다.
+    """
     def __init__(self):
+        """
+        Game 객체를 초기화합니다.
+        """
         pygame.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
@@ -19,6 +25,9 @@ class Game:
         self.game_active = False
 
     def run(self):
+        """
+        게임 루프를 실행합니다.
+        """
         while True:
             self._check_events()
             if self.game_active:
@@ -29,6 +38,9 @@ class Game:
                 self._show_start_screen()
 
     def _check_events(self):
+        """
+        게임 이벤트를 처리합니다.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -43,6 +55,9 @@ class Game:
                     self.snake.change_direction(event.key)
 
     def _check_collisions(self):
+        """
+        뱀과 음식의 충돌을 확인합니다.
+        """
         collisions = pygame.sprite.spritecollide(self.snake, self.foods, True) # type: ignore
         if collisions:
             self.snake.grow()
@@ -50,6 +65,9 @@ class Game:
                 self.foods.add(Food(self))
 
     def _update_screen(self):
+        """
+        화면을 업데이트합니다.
+        """
         self.screen.fill(self.settings.bg_color)
         self.snake.draw()
         self.foods.draw(self.screen)
@@ -57,6 +75,9 @@ class Game:
         self.clock.tick(self.settings.fps)
 
     def _show_start_screen(self):
+        """
+        시작 화면을 표시합니다.
+        """
         self.screen.fill(self.settings.bg_color)
         font = pygame.font.SysFont(None, 74)
         text = font.render("Snake Game", True, (255, 255, 255))
