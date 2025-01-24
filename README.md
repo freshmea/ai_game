@@ -55,3 +55,4 @@ ai_game/
 
 ## 버전
 - 0.0.4
+- release date: 2025-1-24
