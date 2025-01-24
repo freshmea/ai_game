@@ -1,0 +1,7 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "변경된 파일이름 형식: , 버전이 몇인지 명시해주고 변경된 내용을 간략히 적어주세요.",
+        }
+    ]
+}
