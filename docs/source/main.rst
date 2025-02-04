@@ -1,4 +1,4 @@
-main module
+main 모듈
 ===========
 
 .. automodule:: main
