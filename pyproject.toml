@@ -9,7 +9,20 @@ dependencies = [
     "myst-parser>=3.0.1",
     "pygame>=2.6.1",
     "pylint>=3.3.3",
+    "pytest>=8.3.4",
     "sphinx>=7.4.7",
     "sphinx-autodoc-typehints>=2.3.0",
     "sphinx-rtd-theme>=3.0.2",
 ]
+
+[build-system]
+requires = ["setuptools>=42", "wheel", "uv"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ai-game",
+]
+
+[tool.uv.sources]
+ai-game = { workspace = true }

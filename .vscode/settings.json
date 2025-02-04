@@ -12,4 +12,8 @@
             "text": "파일 형식은 test_파일이름.py 입니다.",
         }
     ],
+    "python.analysis.extraPaths": [
+        "C:/Users/Administrator/Documents/ai_game/src/snake"
+    ],
+    "python.defaultInterpreterPath": "C:/Users/Administrator/Documents/ai_game/venv/Scripts/python.exe"
 }
