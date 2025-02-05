@@ -1,19 +1,30 @@
 {
     "github.copilot.chat.commitMessageGeneration.instructions": [
         {
-            "text": "변경된 파일이름 형식: , 버전이 몇인지 명시해주고 변경된 내용을 간략히 적어주세요.",
+            "text": "커밋 메시지는 다음과 같은 형식을 따릅니다:\n\n<유형>[옵션: 범위]: <짧은 설명>\n\n옵션: 상세 설명\n\n옵션: 이슈 번호 등 메타데이터\n\n유형은 다음 중 하나여야 합니다:\n- feat: 새로운 기능 추가\n- fix: 버그 수정\n- docs: 문서 변경\n- style: 코드 포맷 변경 (기능 변경 없음)\n- refactor: 코드 리팩토링\n- test: 테스트 추가 또는 수정\n- chore: 빌드 업무 또는 패키지 관리자 설정 등"
         }
     ],
     "github.copilot.chat.testGeneration.instructions": [
         {
-            "text": "테스트 파일이름 형식: , 테스트할 내용을 간략히 적어주세요.",
+            "text": "Python 코드의 테스트를 생성할 때 pytest 프레임워크를 사용하세요."
         },
         {
-            "text": "파일 형식은 test_파일이름.py 입니다.",
+            "text": "테스트 함수 이름은 'test_'로 시작해야 합니다."
+        },
+        {
+            "text": "각 테스트 함수에는 관련된 docstring을 포함하여 테스트의 목적을 설명하세요."
         }
     ],
     "python.analysis.extraPaths": [
-        "C:/Users/Administrator/Documents/ai_game/src/snake"
+        "src/snake"
     ],
-    "python.defaultInterpreterPath": "C:/Users/Administrator/Documents/ai_game/venv/Scripts/python.exe"
+    "python.defaultInterpreterPath": "venv/Scripts/python.exe",
+    "github.copilot.chat.codeGeneration.instructions": [
+        {
+            "file": ".vscode/code-style.md"
+        },
+        {
+            "file": ".vscode/pygame.md"
+        }
+    ]
 }
