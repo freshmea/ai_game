@@ -12,6 +12,7 @@ src/snake/food.py
 src/snake/game.py
 src/snake/settings.py
 src/snake/snake.py
+src/tetris/game.py
 tests/test_food.py
 tests/test_game.py
 tests/test_settings.py

@@ -36,6 +36,7 @@ extensions = [
     'sphinx.ext.autodoc',        # Docstring 기반 자동 문서화
     'sphinx.ext.napoleon',       # Google/NumPy 스타일 docstring 지원
     'sphinx.ext.viewcode',       # 소스 코드 링크 추가
+    'sphinx.ext.githubpages',
 ]
 extensions.append('myst_parser')
 
