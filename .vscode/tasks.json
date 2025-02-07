@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Show Python Convention",
+            "type": "shell",
+            "command": "type .\\.vscode\\convention.md", // Windows: 'type'; Linux/macOS: 'cat'
+            "problemMatcher": []
+        },
+        {
+            "label": "uv build",
+            "type": "shell",
+            "command": "uv build",
+            "dependsOn": "Show Python Convention",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
