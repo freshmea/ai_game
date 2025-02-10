@@ -23,6 +23,7 @@ class Snake(Sprite):
         self.rect.topleft = (100, 100)
         self.segments = [self.rect]
         self.direction = pygame.K_RIGHT
+        self.grow_pending = 0  # 성장 대기 횟수 초기화
 
     def update(self, *args, **kwargs):
         """
@@ -38,17 +39,12 @@ class Snake(Sprite):
         elif self.direction == pygame.K_DOWN:
             head.y += 20
 
-        # 화면을 벗어나면 반대쪽에서 나오게 함
-        if head.x >= self.settings.screen_width:
-            head.x = 0
-        elif head.x < 0:
-            head.x = self.settings.screen_width - 20
-        elif head.y >= self.settings.screen_height:
-            head.y = 0
-        elif head.y < 0:
-            head.y = self.settings.screen_height - 20
-
-        self.segments = [head] + self.segments[:-1]
+        # grow_pending 값에 따라 마지막 꼬리 제거 여부 결정
+        if self.grow_pending > 0:
+            self.segments = [head] + self.segments
+            self.grow_pending -= 1
+        else:
+            self.segments = [head] + self.segments[:-1]
         self.rect = self.segments[0]
 
     def change_direction(self, key):
@@ -71,7 +67,7 @@ class Snake(Sprite):
         """
         뱀의 길이를 증가시킵니다.
         """
-        self.segments.append(self.segments[-1].copy())
+        self.grow_pending += 1
 
     def draw(self):
         """
