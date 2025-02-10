@@ -3,6 +3,7 @@ import pygame
 from .food import Food
 from .settings import Settings
 from .snake import Snake
+from .ui import UI  # docstring: UI 클래스 임포트
 
 
 class Game:
@@ -23,6 +24,8 @@ class Game:
             self.foods.add(Food(self))
         self.clock = pygame.time.Clock()
         self.game_active = False
+        self.pizzas_eaten = 0  # docstring: 피자 먹은 갯수 초기화
+        self.ui = UI(self)     # docstring: UI 인스턴스 생성
 
     def run(self):
         """
@@ -63,6 +66,7 @@ class Game:
             self.snake.grow()
             for _ in collisions:
                 self.foods.add(Food(self))
+            self.pizzas_eaten += len(collisions)  # docstring: 피자 먹은 갯수 갱신
 
     def _update_screen(self):
         """
@@ -71,6 +75,8 @@ class Game:
         self.screen.fill(self.settings.bg_color)
         self.snake.draw()
         self.foods.draw(self.screen)
+        self.ui.update()        # docstring: UI 정보 갱신
+        self.ui.draw(self.screen)  # docstring: UI 정보 표시
         pygame.display.flip()
         self.clock.tick(self.settings.fps)
 
