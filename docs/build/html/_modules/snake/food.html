@@ -43,6 +43,7 @@
               <p class="caption" role="heading"><span class="caption-text">목차</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">ai_game 프로젝트 설명</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../game.html">게임 설명</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">모듈</a></li>
 </ul>
 
@@ -96,7 +97,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">screen_width</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">screen_height</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">ui_height</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">screen_height</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Food.draw">
 <a class="viewcode-back" href="../../snake.html#snake.food.Food.draw">[문서]</a>
