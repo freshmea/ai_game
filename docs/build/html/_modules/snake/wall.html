@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>snake.settings &mdash; ai_game 0.0.4 문서</title>
+  <title>snake.wall &mdash; ai_game 0.0.4 문서</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">모듈 코드</a></li>
-      <li class="breadcrumb-item active">snake.settings</li>
+      <li class="breadcrumb-item active">snake.wall</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,22 +71,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>snake.settings의 소스 코드</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="Settings">
-<a class="viewcode-back" href="../../snake.html#snake.settings.Settings">[문서]</a>
-<span></span><span class="k">class</span><span class="w"> </span><span class="nc">Settings</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Settings 클래스는 게임 설정을 정의합니다.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Settings 객체를 초기화합니다.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">screen_width</span> <span class="o">=</span> <span class="mi">800</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">screen_height</span> <span class="o">=</span> <span class="mi">600</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bg_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="mi">15</span></div>
+  <h1>snake.wall의 소스 코드</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygame.sprite</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sprite</span>
 
+
+<div class="viewcode-block" id="Wall">
+<a class="viewcode-back" href="../../snake.html#snake.wall.Wall">[문서]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Wall</span><span class="p">(</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wall 클래스는 게임 벽을 정의합니다.</span>
+<span class="sd">    </span>
+<span class="sd">    파란색 사각형 이미지로 표시됩니다.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wall 객체를 초기화합니다.</span>
+<span class="sd">        </span>
+<span class="sd">        매개변수:</span>
+<span class="sd">        x (int): 벽의 x 좌표</span>
+<span class="sd">        y (int): 벽의 y 좌표</span>
+<span class="sd">        width (int): 벽의 너비</span>
+<span class="sd">        height (int): 벽의 높이</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>  <span class="c1"># 파란색</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">topleft</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
+
+
+<span class="c1"># 2023-10-04</span>
 </pre></div>
 
            </div>

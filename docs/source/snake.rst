@@ -1,4 +1,4 @@
-snake 패키지
+snake package
 =============
 
 Submodules
@@ -32,6 +32,22 @@ snake.snake module
 ------------------
 
 .. automodule:: snake.snake
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+snake.ui module
+---------------
+
+.. automodule:: snake.ui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+snake.wall module
+-----------------
+
+.. automodule:: snake.wall
    :members:
    :undoc-members:
    :show-inheritance:

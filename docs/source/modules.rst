@@ -1,9 +1,8 @@
-모듈
-============
+src
+===
 
 .. toctree::
    :maxdepth: 4
 
    main
    snake
- 
