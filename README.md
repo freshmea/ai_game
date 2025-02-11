@@ -9,15 +9,17 @@ ai_game/
 │
 ├── src/
 │   └── snake/
-│       ├── main.py          # 게임의 진입점
-│       ├── game.py          # 게임 로직
-│       ├── snake.py         # 지렁이(뱀) 클래스
-│       ├── food.py          # 음식 클래스
-│       └── settings.py      # 게임 설정
-├── sound/                   # 사운드 파일
-├── image/                   # 이미지 파일
-├── data/                    # 데이터 파일
-└── README.md                # 프로젝트 설명 파일
+│       ├── data/
+│       │   └── game_scores.db        # 게임 점수 데이터베이스
+│       ├── main.py                   # 게임의 진입점
+│       ├── game.py                   # 게임 로직
+│       ├── snake.py                  # 지렁이(뱀) 클래스
+│       ├── food.py                   # 음식 클래스
+│       ├── models.py                 # 게임 점수 모델
+│       ├── settings.py               # 게임 설정
+│       ├── wall.py                   # 벽 클래스
+│       └── ui.py                     # UI 클래스
+└── README.md                         # 프로젝트 설명 파일
 ```
 
 ## 필요 라이브러리

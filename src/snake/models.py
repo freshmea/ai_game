@@ -2,6 +2,7 @@
 SQLModel을 사용한 게임 점수 모델 정의
 """
 
+import os
 from datetime import datetime
 from typing import Optional
 
@@ -16,8 +17,10 @@ class GameScore(SQLModel, table=True):
     play_time: float
     played_at: datetime = Field(default_factory=datetime.now)
 
-# DB 엔진 설정
-engine = create_engine("sqlite:///game_scores.db", echo=False)
+# DB 엔진 설정 (동적으로 절대 경로를 생성)
+BASE_DIR = os.path.dirname(__file__)
+db_path = os.path.join(BASE_DIR, "data", "game_scores.db")
+engine = create_engine(f"sqlite:///{db_path}", echo=False)
 
 def create_db_and_tables():
     """데이터베이스와 테이블을 생성합니다."""
