@@ -20,8 +20,16 @@ class Food(Sprite):
         self.image = pygame.Surface((20, 20))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, game.settings.screen_width - 20)
-        self.rect.y = random.randint(game.ui_height, game.settings.screen_height - 20)
+        
+        # 20픽셀 단위로 정렬된 위치에 음식 생성
+        self.rect.x = 20 * (random.randint(
+            (game.wall_thickness + 19) // 20,
+            (game.settings.screen_width - game.wall_thickness - 40) // 20
+        ))
+        self.rect.y = 20 * (random.randint(
+            (game.ui_height + game.wall_thickness + 19) // 20,
+            (game.settings.screen_height - game.wall_thickness - 40) // 20
+        ))
 
     def draw(self):
         """

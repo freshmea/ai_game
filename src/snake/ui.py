@@ -34,8 +34,8 @@ class UI(Sprite):
         elapsed_time = time.time() - self.start_time
         count = getattr(self.game, 'pizzas_eaten', self.pizzas_eaten)
         initials = getattr(self.game, 'initials', '')
-        speed = getattr(self.game, 'snake_move_interval', 0.5)  # 뱀의 이동 간격(초)
-        ui_text = f"이니셜: {initials}  피자: {count}개, 경과시간: {elapsed_time:.1f}초, 속도: {speed:.2f}초"
+        speed = getattr(self.game.snake, 'speed', 2)  # 뱀의 이동 간격(초)
+        ui_text = f"이니셜: {initials}  피자: {count}개, 경과시간: {elapsed_time:.1f}초, 속도: {speed:.2f}"
         self.image = self.font.render(ui_text, True, (255, 255, 255))
         self.rect = self.image.get_rect(topleft=(10, 10))
 

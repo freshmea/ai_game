@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
-
+import os
+import math
 
 class Snake(Sprite):
     """
@@ -17,61 +18,108 @@ class Snake(Sprite):
         super().__init__()
         self.settings = settings
         self.screen = screen
-        self.image = pygame.Surface((20, 20))
-        self.image.fill((0, 255, 0))
+        
+        # 이미지 로드 및 설정
+        current_dir = os.path.dirname(__file__)
+        image_path = os.path.join(current_dir, 'img', 'snake_head.gif')
+        # 이미지 로드 후 크기 조정
+        self.original_image = pygame.image.load(image_path).convert()
+        self.original_image = pygame.transform.scale(self.original_image, (20, 20))
+        # 흰색을 투명하게 처리
+        self.original_image.set_colorkey((255, 255, 255))
+        # 방향 벡터 초기화 (오른쪽 방향)
+        self.direction_vector = pygame.math.Vector2(1, 0)
+        self.image = pygame.transform.rotate(self.original_image, 
+                                          self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
         self.rect = self.image.get_rect()
-        self.rect.topleft = (100, 100)
-        self.segments = [self.rect]
-        self.direction = pygame.K_RIGHT
-        self.grow_pending = 0  # 성장 대기 횟수 초기화
+        self.rect.topleft = (200, 200)
+        # 초기 40개의 세그먼트로 시작
+        self.segments = [pygame.Rect(200, 200, 20, 20)]
+        for i in range(39):
+            segment = pygame.Rect(200, 200, 20, 20)
+            self.segments.append(segment)
+        self.grow_pending = 0
+        # 초기 각도 설정
+        self.angle = 0
+        
+        
+        # 회전 각속도 (도/초)
+        self.rotation_speed = 3
+        # 이동 속도
+        self.speed = 1.0
+        self.current_angle = 0  # 현재 각도
+
+        # float 기반 위치 추적을 위한 변수 추가
+        self.x = float(200)
+        self.y = float(200)
+        self.direction_vector = pygame.math.Vector2(1, 0)
+        self.rotation_speed = 4.0  # 회전 속도
+        self.current_angle = 0.0
 
     def update(self, *args, **kwargs):
         """
         뱀의 위치를 업데이트합니다.
+        float 기반으로 부드러운 이동을 구현합니다.
         """
-        head = self.rect.copy()
-        if self.direction == pygame.K_RIGHT:
-            head.x += 20
-        elif self.direction == pygame.K_LEFT:
-            head.x -= 20
-        elif self.direction == pygame.K_UP:
-            head.y -= 20
-        elif self.direction == pygame.K_DOWN:
-            head.y += 20
+        # float 위치 업데이트
+        self.x += self.direction_vector.x * self.speed
+        self.y += self.direction_vector.y * self.speed
 
-        # grow_pending 값에 따라 마지막 꼬리 제거 여부 결정
+        # 머리 위치 업데이트 (float -> int 변환)
+        head = self.segments[0]
+        head.x = int(self.x)
+        head.y = int(self.y)
+
+        # 세그먼트 업데이트
         if self.grow_pending > 0:
-            self.segments = [head] + self.segments
+            tail = self.segments[-1].copy()
+            self.segments.append(tail)
             self.grow_pending -= 1
-        else:
-            self.segments = [head] + self.segments[:-1]
-        self.rect = self.segments[0]
+        
+        # 세그먼트 이동 (첫 번째 세그먼트는 이미 업데이트됨)
+        for i in range(len(self.segments) - 1, 0, -1):
+            self.segments[i].x = self.segments[i-1].x
+            self.segments[i].y = self.segments[i-1].y
 
-    def change_direction(self, key):
-        """
-        뱀의 이동 방향을 변경합니다.
+        # 이미지 위치 업데이트
+        self.rect.x = int(self.x)
+        self.rect.y = int(self.y)
 
-        매개변수:
-        key (int): 방향키 값
+    def rotate_left(self):
         """
-        if key == pygame.K_w and self.direction != pygame.K_DOWN:
-            self.direction = pygame.K_UP
-        elif key == pygame.K_a and self.direction != pygame.K_RIGHT:
-            self.direction = pygame.K_LEFT
-        elif key == pygame.K_s and self.direction != pygame.K_UP:
-            self.direction = pygame.K_DOWN
-        elif key == pygame.K_d and self.direction != pygame.K_LEFT:
-            self.direction = pygame.K_RIGHT
+        뱀을 왼쪽으로 회전시킵니다.
+        """
+        self.direction_vector.rotate_ip(-self.rotation_speed)
+        self.image = pygame.transform.rotate(self.original_image, 
+                                          self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
+        center = self.rect.center
+        self.rect = self.image.get_rect(center=center)
+
+    def rotate_right(self):
+        """
+        뱀을 오른쪽으로 회전시킵니다.
+        """
+        self.direction_vector.rotate_ip(self.rotation_speed)
+        self.image = pygame.transform.rotate(self.original_image, 
+                                          self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
+        center = self.rect.center
+        self.rect = self.image.get_rect(center=center)
 
     def grow(self):
         """
         뱀의 길이를 증가시킵니다.
+        한 번에 20개의 세그먼트를 추가합니다.
         """
-        self.grow_pending += 1
+        self.grow_pending += 20  # 20개씩 세그먼트 추가
 
     def draw(self):
         """
         뱀을 화면에 그립니다.
+        먼저 몸통을 그리고 마지막에 머리를 그립니다.
         """
-        for segment in self.segments:
-            pygame.draw.rect(self.screen, (0, 255, 0), segment)
+        # 몸통 그리기 (첫 번째 세그먼트는 머리이므로 제외)
+        for segment in self.segments[10:]:
+            pygame.draw.circle(self.screen, (0, 100, 0), segment.center, segment.width // 2)
+            
+        # 머리 그리기 (마지막에 그려서 항상 보이게 함)
+        self.screen.blit(self.image, self.rect)

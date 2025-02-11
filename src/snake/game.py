@@ -23,6 +23,16 @@ class Game:
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Snake Game")
+        
+        # 배경화면 로드 및 설정
+        try:
+            self.background = pygame.image.load(self.settings.background_image_path)
+            self.background = pygame.transform.scale(self.background, 
+                                                  (self.settings.screen_width, 
+                                                   self.settings.screen_height))
+        except pygame.error:
+            self.background = None
+            
         # 공통 폰트 객체 생성
         self.font = None
         try:
@@ -42,8 +52,6 @@ class Game:
         self.game_active = False
         self.walls = pygame.sprite.Group()
         self._create_walls()
-        # 뱀의 이동 간격(초): 초기 0.5초, 마지막 이동 시간 초기화
-        self.snake_move_interval = 0.5
         self.last_move_time = pygame.time.get_ticks() / 1000.0
         self.start_time = time.time()  # 게임 시작 시간 기록
         self.high_scores = get_high_scores()  # 최고 점수 로드
@@ -56,12 +64,19 @@ class Game:
             self._check_events()
             if self.game_active:
                 current_time = pygame.time.get_ticks() / 1000.0
-                if current_time - self.last_move_time >= self.snake_move_interval:
-                    self.snake.update()
-                    self.last_move_time = current_time
+                keys = pygame.key.get_pressed()
+                
+                # 키 상태 확인하여 뱀 방향 업데이트
+                if keys[pygame.K_a]:
+                    self.snake.rotate_left()
+                if keys[pygame.K_d]:
+                    self.snake.rotate_right()
+                
+                self.snake.update()
+                
                 self._check_collisions()
-                self._check_wall_collision()  # 벽 충돌 검사
-                self._check_self_collision()   # 자기 자신과 충돌 검사
+                self._check_wall_collision()
+                self._check_self_collision()
                 self._update_screen()
             else:
                 self._show_start_screen()
@@ -80,8 +95,6 @@ class Game:
                 elif event.key in [pygame.K_ESCAPE, pygame.K_q]:
                     pygame.quit()
                     exit()
-                elif event.key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
-                    self.snake.change_direction(event.key)
 
     def _check_collisions(self):
         """
@@ -90,12 +103,13 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.snake, self.foods, True) # type: ignore
         if collisions:
             self.snake.grow()
+            
+            # 새로운 피자 생성 및 게임 상태 업데이트
             for _ in collisions:
                 self.foods.add(Food(self))
             self.pizzas_eaten += len(collisions)
-            # 속도 증가: 5피자마다 snake_move_interval 0.05초 감소 (최소 0.1초)
-            new_interval = max(0.1, 0.5 - 0.05 * (self.pizzas_eaten // 5))
-            self.snake_move_interval = new_interval
+            # 속도 증가: 5피자마다 snake_speed 1씩 증가
+            self.snake.speed = 1.0 + self.pizzas_eaten / 10
 
     def _check_wall_collision(self):
         """
@@ -107,9 +121,11 @@ class Game:
     def _check_self_collision(self):
         """
         뱀의 머리가 자신의 몸과 충돌하는지 확인합니다.
+        처음 40개의 세그먼트는 충돌 검사에서 제외합니다.
         """
         head = self.snake.segments[0]
-        for segment in self.snake.segments[1:]:
+        # 40번째 세그먼트 이후부터 충돌 검사
+        for segment in self.snake.segments[40:]:
             if head.colliderect(segment):
                 self._end_game()
                 return
@@ -182,36 +198,58 @@ class Game:
     def _create_walls(self):
         """
         게임 영역의 경계에 벽 Sprite를 생성합니다.
-        
-        UI와 게임 영역의 경계를 포함하여 좌측, 우측, 상단(게임 영역 시작) 및 하단 벽을 생성합니다.
+        wall_thickness를 기준으로 정사각형 벽돌들을 배치합니다.
         """
         sw = self.settings.screen_width
         sh = self.settings.screen_height
         wt = self.wall_thickness
-        # 왼쪽 벽 (게임 영역: UI 영역 아래)
-        left_wall = Wall(0, self.ui_height, wt, sh - self.ui_height)
+        
+        # 왼쪽 벽 (UI 영역 아래부터)
+        for y in range(self.ui_height, sh - wt, wt):
+            left_wall = Wall(0, y, wt, wt)
+            self.walls.add(left_wall)
+        
         # 오른쪽 벽
-        right_wall = Wall(sw - wt, self.ui_height, wt, sh - self.ui_height)
-        # 상단 벽: UI와 게임 영역의 경계 표시
-        top_wall = Wall(0, self.ui_height, sw, wt)
+        for y in range(self.ui_height, sh - wt, wt):
+            right_wall = Wall(sw - wt, y, wt, wt)
+            self.walls.add(right_wall)
+        
+        # 상단 벽 (UI와 게임 영역의 경계)
+        for x in range(0, sw, wt):
+            top_wall = Wall(x, self.ui_height, wt, wt)
+            self.walls.add(top_wall)
+        
         # 하단 벽
-        bottom_wall = Wall(0, sh - wt, sw, wt)
-        self.walls.add(left_wall, right_wall, top_wall, bottom_wall)
+        for x in range(0, sw, wt):
+            bottom_wall = Wall(x, sh - wt, wt, wt)
+            self.walls.add(bottom_wall)
 
     def _update_screen(self):
         """
         화면을 업데이트합니다.
         """
-        # UI 영역 그리기 (상단 50px)
-        pygame.draw.rect(self.screen, (50, 50, 50), (0, 0, self.settings.screen_width, self.ui_height))
-        self.ui.update()        # UI 정보 갱신
-        self.ui.draw(self.screen)  # UI 정보 표시
+        # 배경 그리기
+        if self.background:
+            # 게임 영역 배경화면 그리기
+            game_area_background = self.background.subsurface(
+                (0, self.ui_height, 
+                 self.settings.screen_width, 
+                 self.settings.screen_height - self.ui_height))
+            self.screen.blit(game_area_background, (0, self.ui_height))
+        else:
+            # 배경화면이 없는 경우 단색 배경
+            pygame.draw.rect(self.screen, self.settings.bg_color, 
+                           (0, self.ui_height, 
+                            self.settings.screen_width, 
+                            self.settings.screen_height - self.ui_height))
+        
+        # UI 영역 그리기
+        pygame.draw.rect(self.screen, (50, 50, 50), 
+                        (0, 0, self.settings.screen_width, self.ui_height))
+        self.ui.update()
+        self.ui.draw(self.screen)
 
-        # 게임 영역 그리기 (UI 영역 아래)
-        # 게임 영역 배경 채우기
-        pygame.draw.rect(self.screen, self.settings.bg_color, 
-                         (0, self.ui_height, self.settings.screen_width, self.settings.screen_height - self.ui_height))
-        # 벽 그리기
+        # 게임 요소 그리기
         self.walls.draw(self.screen)
         self.snake.draw()
         self.foods.draw(self.screen)
