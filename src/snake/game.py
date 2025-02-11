@@ -1,3 +1,4 @@
+import os
 import time
 
 import pygame
@@ -36,7 +37,9 @@ class Game:
         # 공통 폰트 객체 생성
         self.font = None
         try:
-            self.font = pygame.font.Font("C:/Windows/Fonts/malgun.ttf", 20)
+            current_dir = os.path.dirname(__file__)
+            self.font_path = os.path.join(current_dir, 'data', 'malgun.ttf')
+            self.font = pygame.font.Font(self.font_path, 20)
         except Exception:
             self.font = pygame.font.SysFont(None, 20)
         # Food 생성 전에 UI 영역 및 벽 두께 정의
