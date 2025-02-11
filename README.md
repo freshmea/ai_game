@@ -22,23 +22,23 @@ ai_game/
 
 ## 필요 라이브러리
 - Python 3.x
-- Pygame
+- uv
 
 ## 설치 방법
 1. Python 3.x를 설치합니다.
-2. Pygame 라이브러리를 설치합니다:
+2. uv를 이용하여 Pygame 라이브러리를 설치합니다:
     ```
-    pip install pygame
+    uv sync
     ```
 
 ## 실행 방법
 1. 프로젝트 디렉토리로 이동합니다:
     ```
-    cd /c:/Users/Administrator/Documents/ai_game/src/snake
+    cd /c:/Users/Administrator/Documents/ai_game/
     ```
 2. 게임을 실행합니다:
     ```
-    python main.py
+    uv run python src/main.py
     ```
 
 ## 게임 방법

@@ -1,5 +1,6 @@
 import os
 
+
 class Settings:
     """
     Settings 클래스는 게임 설정을 정의합니다.
@@ -12,7 +13,7 @@ class Settings:
         self.screen_height = 600
         self.bg_color = (0, 0, 0)
         self.fps = 30
-        
+
         # 배경화면 설정
         current_dir = os.path.dirname(__file__)
         self.background_image_path = os.path.join(current_dir, 'img', 'bg.gif')
