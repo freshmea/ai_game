@@ -1,10 +1,13 @@
+import time
+
 import pygame
 
 from .food import Food
+from .models import create_db_and_tables, get_high_scores, save_score
 from .settings import Settings
 from .snake import Snake
-from .ui import UI  # docstring: UI 클래스 임포트
-from .wall import Wall  # docstring: Wall 클래스 임포트
+from .ui import UI
+from .wall import Wall
 
 
 class Game:
@@ -16,6 +19,7 @@ class Game:
         Game 객체를 초기화합니다.
         """
         pygame.init()
+        create_db_and_tables()  # DB 초기화
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Snake Game")
@@ -41,6 +45,8 @@ class Game:
         # 뱀의 이동 간격(초): 초기 0.5초, 마지막 이동 시간 초기화
         self.snake_move_interval = 0.5
         self.last_move_time = pygame.time.get_ticks() / 1000.0
+        self.start_time = time.time()  # 게임 시작 시간 기록
+        self.high_scores = get_high_scores()  # 최고 점수 로드
 
     def run(self):
         """
@@ -113,34 +119,60 @@ class Game:
         게임 종료 상태로 전환하고 엔딩 화면을 표시합니다.
         """
         self.game_active = False
+        play_time = time.time() - self.start_time
+        if hasattr(self, 'initials'):
+            save_score(self.initials, self.pizzas_eaten, play_time)
+            self.high_scores = get_high_scores()  # 점수 저장 후 최고 점수 다시 로드
         self._show_ending_screen()
 
     def _show_ending_screen(self):
         """
         엔딩 화면을 표시합니다.
-        
-        이니셜과 점수를 표시하고, 스페이스바를 누르면 게임을 재시작하며,
-        ESC 또는 Q를 누르면 게임을 종료합니다.
         """
-        font = self.font  # game에서 생성한 공통 폰트 사용
+        font = self.font
+        line_height = 30
         while True:
             self.screen.fill(self.settings.bg_color)
+            
+            # 게임 오버 텍스트
             end_text = font.render(
                 f"Game Over - 이니셜: {getattr(self, 'initials', '---')}  점수: {self.pizzas_eaten}개",
                 True, (255, 255, 255))
-            prompt_text = font.render("스페이스바: 재시작, ESC 혹은 Q: 종료", True, (255, 255, 255))
-            end_rect = end_text.get_rect(center=(self.settings.screen_width // 2, self.settings.screen_height // 3))
-            prompt_rect = prompt_text.get_rect(center=(self.settings.screen_width // 2, self.settings.screen_height // 2))
+            end_rect = end_text.get_rect(center=(self.settings.screen_width // 2, self.settings.screen_height // 4))
             self.screen.blit(end_text, end_rect)
+            
+            # 최고 점수 표시
+            high_score_text = font.render("최고 점수", True, (255, 255, 255))
+            high_score_rect = high_score_text.get_rect(
+                center=(self.settings.screen_width // 2, self.settings.screen_height // 2 - line_height))
+            self.screen.blit(high_score_text, high_score_rect)
+            
+            # 상위 5개 점수 표시
+            start_y = self.settings.screen_height // 2
+            for i, score in enumerate(self.high_scores):
+                score_text = font.render(
+                    f"{i+1}. {score.player_initials}: {score.score}점 ({score.play_time:.1f}초)",
+                    True, (255, 255, 255))
+                score_rect = score_text.get_rect(
+                    center=(self.settings.screen_width // 2, start_y + i * line_height))
+                self.screen.blit(score_text, score_rect)
+            
+            # 안내 메시지
+            prompt_text = font.render("스페이스바: 재시작, ESC 혹은 Q: 종료", True, (255, 255, 255))
+            prompt_rect = prompt_text.get_rect(
+                center=(self.settings.screen_width // 2, 
+                       start_y + (len(self.high_scores) + 2) * line_height))
             self.screen.blit(prompt_text, prompt_rect)
+            
             pygame.display.flip()
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        self.__init__()  # 게임 초기 상태로 재시작
+                        self.__init__()
                         return
                     elif event.key in [pygame.K_ESCAPE, pygame.K_q]:
                         pygame.quit()
@@ -220,4 +252,4 @@ class Game:
                     elif event.unicode.isalpha() and len(initials) < 3:
                         initials += event.unicode.upper()
             self.clock.tick(self.settings.fps)
-# 2023-10-04
+# 2023-10-24
