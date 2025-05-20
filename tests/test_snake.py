@@ -15,27 +15,25 @@ def snake():
     """
     pygame.init()
     settings = Settings()
-    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+    screen = pygame.Surface((settings.screen_width, settings.screen_height))
     return Snake(settings, screen)
 
 def test_initial_position(snake):
-    """
-    Snake 객체의 초기 위치를 테스트합니다.
-    """
-    assert snake.rect.topleft == (100, 100)
+    """Snake 객체의 초기 위치를 테스트합니다."""
+    assert snake.rect.topleft == (200, 200)
 
-def test_change_direction(snake):
-    """
-    Snake 객체의 방향 변경을 테스트합니다.
-    """
-    snake.change_direction(pygame.K_w)
-    assert snake.direction == pygame.K_UP
-    snake.change_direction(pygame.K_a)
-    assert snake.direction == pygame.K_LEFT
-    snake.change_direction(pygame.K_s)
-    assert snake.direction == pygame.K_DOWN
-    snake.change_direction(pygame.K_d)
-    assert snake.direction == pygame.K_RIGHT
+def test_rotate_left_and_right(snake):
+    """rotate_left와 rotate_right 동작을 테스트합니다."""
+    original = snake.direction_vector.copy()
+    snake.rotate_left()
+    assert snake.direction_vector != original
+    left_vector = snake.direction_vector.copy()
+    snake.rotate_right()
+    # 왼쪽 회전 후 오른쪽 회전하면 원래 방향으로 돌아와야 함
+    assert pytest.approx(snake.direction_vector.x) == pytest.approx(original.x)
+    assert pytest.approx(snake.direction_vector.y) == pytest.approx(original.y)
+    # rotate_left로 변경된 값과 현재 값은 달라야 함
+    assert (snake.direction_vector.x != left_vector.x) or (snake.direction_vector.y != left_vector.y)
 
 def test_grow(snake):
     """
@@ -43,4 +41,5 @@ def test_grow(snake):
     """
     initial_length = len(snake.segments)
     snake.grow()
+    snake.update()
     assert len(snake.segments) == initial_length + 1
