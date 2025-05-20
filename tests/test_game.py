@@ -31,6 +31,10 @@ def test_start_game(game):
     game.game_active = True
     assert game.game_active
 
+def test_initial_enemy_snake_count(game):
+    """게임 시작 시 적 뱀이 10마리 생성되는지 확인한다."""
+    assert len(game.enemy_snakes) == 10
+
 # 추가 테스트
 
 def test_snake_update_movement(game):

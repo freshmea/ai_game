@@ -2,6 +2,12 @@
 
 이 에이전트는 GitHub 저장소에서 Pull Request(PR)를 자동으로 생성, 설명, 리뷰하는 작업을 수행합니다. PR 생성 시 변경 사항을 요약하고, 코드 리뷰를 통해 잠재적인 문제를 식별하며, 개선 사항을 제안합니다.
 
+## 파이썬 pygame 코드의 실행
+
+- 반드시 uv run src/main.py 명령어로 실행해야 합니다.
+- 패키지의 유무는 uv pip list 로 확인 해야 합니다.
+- 파이테스트는 반드시 uv run python -m pytest 로 실행 하애 합니다.
+
 ## Capabilities
 
 - 변경된 코드 기반으로 PR 생성
