@@ -16,4 +16,4 @@ def test_initial_settings():
     assert settings.screen_width == 800
     assert settings.screen_height == 600
     assert settings.bg_color == (0, 0, 0)
-    assert settings.fps == 15
+    assert settings.fps == 30
