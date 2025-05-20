@@ -1,5 +1,6 @@
 import os
 import time
+import random
 
 import pygame
 
@@ -25,14 +26,20 @@ class Game:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Snake Game")
         
-        # 배경화면 로드 및 설정
-        try:
-            self.background = pygame.image.load(self.settings.background_image_path)
-            self.background = pygame.transform.scale(self.background, 
-                                                  (self.settings.screen_width, 
-                                                   self.settings.screen_height))
-        except pygame.error:
-            self.background = None
+        # 배경화면 로드 및 설정 (여러 이미지를 로드하여 주기적으로 교체)
+        self.backgrounds = []
+        for path in self.settings.background_image_paths:
+            try:
+                bg = pygame.image.load(path)
+                bg = pygame.transform.scale(
+                    bg,
+                    (self.settings.screen_width, self.settings.screen_height),
+                )
+                self.backgrounds.append(bg)
+            except pygame.error:
+                continue
+        self.current_background = self.backgrounds[0] if self.backgrounds else None
+        self.last_background_change_time = time.time()
             
         # 공통 폰트 객체 생성
         self.font = None
@@ -232,18 +239,26 @@ class Game:
         화면을 업데이트합니다.
         """
         # 배경 그리기
-        if self.background:
-            # 게임 영역 배경화면 그리기
-            game_area_background = self.background.subsurface(
-                (0, self.ui_height, 
-                 self.settings.screen_width, 
-                 self.settings.screen_height - self.ui_height))
-            self.screen.blit(game_area_background, (0, self.ui_height))
+        if self.backgrounds:
+            current_time = time.time()
+            if current_time - self.last_background_change_time >= self.settings.background_change_interval:
+                self.current_background = random.choice(self.backgrounds)
+                self.last_background_change_time = current_time
+            if self.current_background:
+                game_area_background = self.current_background.subsurface(
+                    (
+                        0,
+                        self.ui_height,
+                        self.settings.screen_width,
+                        self.settings.screen_height - self.ui_height,
+                    )
+                )
+                self.screen.blit(game_area_background, (0, self.ui_height))
         else:
             # 배경화면이 없는 경우 단색 배경
-            pygame.draw.rect(self.screen, self.settings.bg_color, 
-                           (0, self.ui_height, 
-                            self.settings.screen_width, 
+            pygame.draw.rect(self.screen, self.settings.bg_color,
+                           (0, self.ui_height,
+                            self.settings.screen_width,
                             self.settings.screen_height - self.ui_height))
         
         # UI 영역 그리기
