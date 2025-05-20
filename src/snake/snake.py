@@ -44,7 +44,7 @@ class Snake(Sprite):
         
         
         # 회전 각속도 (도/초)
-        self.rotation_speed = 3
+        self.rotation_speed = 4.0
         # 이동 속도
         self.speed = 1.0
         self.current_angle = 0  # 현재 각도
@@ -52,8 +52,6 @@ class Snake(Sprite):
         # float 기반 위치 추적을 위한 변수 추가
         self.x = float(200)
         self.y = float(200)
-        self.direction_vector = pygame.math.Vector2(1, 0)
-        self.rotation_speed = 4.0  # 회전 속도
         self.current_angle = 0.0
 
     def update(self, *args, **kwargs):
