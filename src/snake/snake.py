@@ -44,7 +44,7 @@ class Snake(Sprite):
         
         
         # 회전 각속도 (도/초)
-        self.rotation_speed = 3
+        self.rotation_speed = 4.0
         # 이동 속도
         self.speed = 1.0
         self.current_angle = 0  # 현재 각도
@@ -52,8 +52,6 @@ class Snake(Sprite):
         # float 기반 위치 추적을 위한 변수 추가
         self.x = float(200)
         self.y = float(200)
-        self.direction_vector = pygame.math.Vector2(1, 0)
-        self.rotation_speed = 4.0  # 회전 속도
         self.current_angle = 0.0
 
     def update(self, *args, **kwargs):
@@ -117,7 +115,7 @@ class Snake(Sprite):
         뱀을 화면에 그립니다.
         먼저 몸통을 그리고 마지막에 머리를 그립니다.
         """
-        # 몸통 그리기 (첫 번째 세그먼트는 머리이므로 제외)
+        # 몸통 그리기 (초기 10개 세그먼트는 머리와 겹치므로 제외)
         for segment in self.segments[10:]:
             pygame.draw.circle(self.screen, (0, 100, 0), segment.center, segment.width // 2)
             

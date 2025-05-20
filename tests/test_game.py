@@ -33,21 +33,13 @@ def test_start_game(game):
 
 # 추가 테스트
 
-def test_snake_update_direction(game):
-    """
-    Snake 클래스의 update 메서드가 올바른 방향으로 이동하는지 테스트합니다.
-    """
+def test_snake_update_movement(game):
+    """Snake.update가 현재 방향으로 이동하는지 테스트합니다."""
     snake = game.snake
     initial_head = snake.rect.copy()
-    # 오른쪽 방향으로 이동
-    snake.direction = pygame.K_RIGHT
     snake.update()
     new_head = snake.rect
-    # 화면 경계를 고려한 이동 테스트
-    if initial_head.x >= game.settings.screen_width - 20:
-        assert new_head.x == 0
-    else:
-        assert new_head.x == initial_head.x + 20
+    assert new_head.x == initial_head.x + int(snake.speed)
 
 def test_snake_grow(game):
     """
@@ -56,6 +48,7 @@ def test_snake_grow(game):
     snake = game.snake
     initial_length = len(snake.segments)
     snake.grow()
+    snake.update()
     new_length = len(snake.segments)
     assert new_length == initial_length + 1
 
