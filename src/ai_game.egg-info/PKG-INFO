@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: ai-game
 Version: 0.0.4
 Summary: Add your description here
@@ -14,6 +14,7 @@ Requires-Dist: sphinx>=7.4.7
 Requires-Dist: sphinx-autodoc-typehints>=2.3.0
 Requires-Dist: sphinx-rtd-theme>=3.0.2
 Requires-Dist: sqlmodel>=0.0.22
+Dynamic: license-file
 
 # ai_game
 
