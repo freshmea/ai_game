@@ -3,6 +3,9 @@ import sys
 import time
 import unittest
 
+# SDL 비디오 드라이버를 dummy로 설정하여 화면 없이 테스트할 수 있도록 한다.
+os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
+
 import pygame
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
