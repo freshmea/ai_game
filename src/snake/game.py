@@ -56,7 +56,8 @@ class Game:
         self.pizzas_eaten = 0        # docstring: 피자 먹은 개수 초기화
         self.snake = Snake(self.settings, self.screen)
         self.enemy_snakes = pygame.sprite.Group()
-        self._spawn_enemy_snake()
+        for _ in range(10):
+            self._spawn_enemy_snake()
         self.last_enemy_spawn_time = time.time()
         self.enemy_spawn_interval = 30  # 초마다 적 뱀 추가
         self.ui = UI(self)           # docstring: UI 인스턴스 생성 (self.font를 사용)
