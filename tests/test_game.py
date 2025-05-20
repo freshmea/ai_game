@@ -67,3 +67,8 @@ def test_collision_and_food_regeneration(game):
     # 충돌 후 음식은 제거되고 새 음식이 추가되어 총 개수는 유지되거나, snake 길이가 증가함
     assert len(game.foods) == initial_food_count
     assert len(snake.segments) == initial_snake_length + 1
+
+def test_spawn_enemy_snake(game):
+    initial = len(game.enemy_snakes)
+    game._spawn_enemy_snake()
+    assert len(game.enemy_snakes) == initial + 1
