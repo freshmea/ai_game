@@ -8,6 +8,7 @@ from .food import Food
 from .models import create_db_and_tables, get_high_scores, save_score
 from .settings import Settings
 from .snake import Snake
+from .enemy_snake import EnemySnake
 from .ui import UI
 from .wall import Wall
 
@@ -54,6 +55,10 @@ class Game:
         self.wall_thickness = 20     # docstring: 벽 두께 설정
         self.pizzas_eaten = 0        # docstring: 피자 먹은 개수 초기화
         self.snake = Snake(self.settings, self.screen)
+        self.enemy_snakes = pygame.sprite.Group()
+        self._spawn_enemy_snake()
+        self.last_enemy_spawn_time = time.time()
+        self.enemy_spawn_interval = 30  # 초마다 적 뱀 추가
         self.ui = UI(self)           # docstring: UI 인스턴스 생성 (self.font를 사용)
         self.foods = pygame.sprite.Group()
         for _ in range(10):
@@ -81,10 +86,17 @@ class Game:
                     self.snake.rotate_left()
                 if keys[pygame.K_d]:
                     self.snake.rotate_right()
-                
+
                 self.snake.update()
-                
+                for enemy in self.enemy_snakes:
+                    enemy.update()
+
+                if time.time() - self.last_enemy_spawn_time >= self.enemy_spawn_interval:
+                    self._spawn_enemy_snake()
+                    self.last_enemy_spawn_time = time.time()
+
                 self._check_collisions()
+                self._check_enemy_collision()
                 self._check_wall_collision()
                 self._check_self_collision()
                 self._update_screen()
@@ -110,7 +122,7 @@ class Game:
         """
         뱀과 음식의 충돌을 확인합니다.
         """
-        collisions = pygame.sprite.spritecollide(self.snake, self.foods, True) # type: ignore
+        collisions = pygame.sprite.spritecollide(self.snake, self.foods, True)  # type: ignore
         if collisions:
             self.snake.grow()
             
@@ -120,6 +132,11 @@ class Game:
             self.pizzas_eaten += len(collisions)
             # 속도 증가: 5피자마다 snake_speed 1씩 증가
             self.snake.speed = 1.0 + self.pizzas_eaten / 10
+
+    def _check_enemy_collision(self):
+        """플레이어 뱀이 적 뱀과 충돌하는지 확인한다."""
+        if pygame.sprite.spritecollide(self.snake, self.enemy_snakes, False):
+            self._end_game()
 
     def _check_wall_collision(self):
         """
@@ -234,6 +251,17 @@ class Game:
             bottom_wall = Wall(x, sh - wt, wt, wt)
             self.walls.add(bottom_wall)
 
+    def _spawn_enemy_snake(self):
+        """적 뱀을 생성하여 그룹에 추가한다."""
+        enemy = EnemySnake(self.settings, self.screen)
+        enemy.x = random.randint(40, self.settings.screen_width - 60)
+        enemy.y = random.randint(self.ui_height + 40, self.settings.screen_height - 60)
+        for seg in enemy.segments:
+            seg.x = int(enemy.x)
+            seg.y = int(enemy.y)
+        enemy.rect.topleft = (int(enemy.x), int(enemy.y))
+        self.enemy_snakes.add(enemy)
+
     def _update_screen(self):
         """
         화면을 업데이트합니다.
@@ -270,6 +298,8 @@ class Game:
         # 게임 요소 그리기
         self.walls.draw(self.screen)
         self.snake.draw()
+        for enemy in self.enemy_snakes:
+            enemy.draw()
         self.foods.draw(self.screen)
         pygame.display.flip()
         self.clock.tick(self.settings.fps)

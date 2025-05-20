@@ -6,7 +6,8 @@ from .food import Food
 from .game import Game
 from .settings import Settings
 from .snake import Snake
+from .enemy_snake import EnemySnake
 
-__all__ = ['Food', 'Settings', 'Snake', 'Game']
+__all__ = ['Food', 'Settings', 'Snake', 'EnemySnake', 'Game']
 
 # 2023-10-04
