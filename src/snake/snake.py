@@ -117,7 +117,7 @@ class Snake(Sprite):
         뱀을 화면에 그립니다.
         먼저 몸통을 그리고 마지막에 머리를 그립니다.
         """
-        # 몸통 그리기 (첫 번째 세그먼트는 머리이므로 제외)
+        # 몸통 그리기 (초기 10개 세그먼트는 머리와 겹치므로 제외)
         for segment in self.segments[10:]:
             pygame.draw.circle(self.screen, (0, 100, 0), segment.center, segment.width // 2)
             
