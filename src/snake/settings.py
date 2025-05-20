@@ -17,7 +17,7 @@ class Settings:
         # 배경화면 설정 (10개의 배경화면을 순회하면서 사용)
         current_dir = os.path.dirname(__file__)
         self.background_image_paths = [
-            os.path.join(current_dir, 'img', f'bg{i}.gif') for i in range(10)
+            os.path.join(current_dir, 'img', f'bg{i}.gif') for i in range(2)
         ]
         # 배경 교체 주기(초)
         self.background_change_interval = 5
