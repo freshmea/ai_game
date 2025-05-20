@@ -34,3 +34,11 @@
 ## Example
 
 사용자가 `/create-pr` 명령어를 입력하면, 에이전트는 현재 변경된 코드 파일들을 분석하여 적절한 PR 제목과 설명을 생성하고, GitHub에 PR을 생성합니다. 이후 `/review-pr` 명령어를 통해 해당 PR에 대한 코드 리뷰를 수행하고 피드백을 제공합니다.
+
+## codeStyle
+
+./.vscode/code-style.md
+
+## pygame
+
+./.vscode/pygame.md
