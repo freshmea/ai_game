@@ -45,7 +45,7 @@ class Game:
         # Food 생성 전에 UI 영역 및 벽 두께 정의
         self.ui_height = 60          # docstring: UI 영역 높이 (상단)
         self.wall_thickness = 20     # docstring: 벽 두께 설정
-        self.pizzas_eaten = 0        # docstring: 피자 먹은 갯수 초기화
+        self.pizzas_eaten = 0        # docstring: 피자 먹은 개수 초기화
         self.snake = Snake(self.settings, self.screen)
         self.ui = UI(self)           # docstring: UI 인스턴스 생성 (self.font를 사용)
         self.foods = pygame.sprite.Group()
