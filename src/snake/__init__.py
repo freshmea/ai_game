@@ -8,3 +8,5 @@ from .settings import Settings
 from .snake import Snake
 
 __all__ = ['Food', 'Settings', 'Snake', 'Game']
+
+# 2023-10-04

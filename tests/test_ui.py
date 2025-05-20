@@ -9,6 +9,19 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 
 from snake.ui import UI
 
+class DummySnake:
+    """
+    DummySnake 클래스는 UI 테스트용 더미 뱀 객체입니다.
+    """
+    def __init__(self):
+        self.speed = 2
+        self.direction_vector = pygame.math.Vector2(1, 0)
+        self.image = pygame.Surface((20, 20))
+        self.rect = self.image.get_rect(topleft=(200, 200))
+        self.segments = [pygame.Rect(200, 200, 20, 20)]
+        for i in range(39):
+            segment = pygame.Rect(200, 200, 20, 20)
+            self.segments.append(segment)
 
 class DummyGame:
     """
@@ -16,11 +29,8 @@ class DummyGame:
     """
     def __init__(self):
         self.pizzas_eaten = 5
-        class DummySettings:
-            screen_width = 800
-            screen_height = 600
-        self.settings = DummySettings()
-
+        self.font = pygame.font.Font(None, 36)
+        self.snake = DummySnake()
 class TestUI(unittest.TestCase):
     """
     UI 클래스 동작 테스트

@@ -2,6 +2,9 @@ import pygame
 from pygame.sprite import Sprite
 import os
 import math
+import colorsys
+import random
+vec = pygame.math.Vector2
 
 class Snake(Sprite):
     """
@@ -18,7 +21,8 @@ class Snake(Sprite):
         super().__init__()
         self.settings = settings
         self.screen = screen
-        
+        self.direction_vector = vec(1, 0)  # 초기 방향은 오른쪽
+
         # 이미지 로드 및 설정
         current_dir = os.path.dirname(__file__)
         image_path = os.path.join(current_dir, 'img', 'snake_head.gif')
@@ -27,9 +31,8 @@ class Snake(Sprite):
         self.original_image = pygame.transform.scale(self.original_image, (20, 20))
         # 흰색을 투명하게 처리
         self.original_image.set_colorkey((255, 255, 255))
-        # 방향 벡터 초기화 (오른쪽 방향)
-        self.direction_vector = pygame.math.Vector2(1, 0)
-        self.image = pygame.transform.rotate(self.original_image, 
+
+        self.image = pygame.transform.rotate(self.original_image,
                                           self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (200, 200)
@@ -41,8 +44,8 @@ class Snake(Sprite):
         self.grow_pending = 0
         # 초기 각도 설정
         self.angle = 0
-        
-        
+
+
         # 회전 각속도 (도/초)
         self.rotation_speed = 4.0
         # 이동 속도
@@ -54,6 +57,9 @@ class Snake(Sprite):
         self.y = float(200)
         self.current_angle = 0.0
 
+        # 무지개 색을 위한 색상 순환 값
+        self.color_cycle = 0.0
+
     def update(self, *args, **kwargs):
         """
         뱀의 위치를 업데이트합니다.
@@ -62,6 +68,9 @@ class Snake(Sprite):
         # float 위치 업데이트
         self.x += self.direction_vector.x * self.speed
         self.y += self.direction_vector.y * self.speed
+
+        # 색상 순환 값 업데이트
+        self.color_cycle = (self.color_cycle + 0.02) % 1.0
 
         # 머리 위치 업데이트 (float -> int 변환)
         head = self.segments[0]
@@ -73,7 +82,7 @@ class Snake(Sprite):
             tail = self.segments[-1].copy()
             self.segments.append(tail)
             self.grow_pending -= 1
-        
+
         # 세그먼트 이동 (첫 번째 세그먼트는 이미 업데이트됨)
         for i in range(len(self.segments) - 1, 0, -1):
             self.segments[i].x = self.segments[i-1].x
@@ -88,7 +97,7 @@ class Snake(Sprite):
         뱀을 왼쪽으로 회전시킵니다.
         """
         self.direction_vector.rotate_ip(-self.rotation_speed)
-        self.image = pygame.transform.rotate(self.original_image, 
+        self.image = pygame.transform.rotate(self.original_image,
                                           self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
         center = self.rect.center
         self.rect = self.image.get_rect(center=center)
@@ -98,7 +107,7 @@ class Snake(Sprite):
         뱀을 오른쪽으로 회전시킵니다.
         """
         self.direction_vector.rotate_ip(self.rotation_speed)
-        self.image = pygame.transform.rotate(self.original_image, 
+        self.image = pygame.transform.rotate(self.original_image,
                                           self.direction_vector.angle_to(pygame.math.Vector2(0, -1)))
         center = self.rect.center
         self.rect = self.image.get_rect(center=center)
@@ -116,8 +125,14 @@ class Snake(Sprite):
         먼저 몸통을 그리고 마지막에 머리를 그립니다.
         """
         # 몸통 그리기 (초기 10개 세그먼트는 머리와 겹치므로 제외)
-        for segment in self.segments[10:]:
-            pygame.draw.circle(self.screen, (0, 100, 0), segment.center, segment.width // 2)
-            
+        for idx, segment in enumerate(self.segments[10:]):
+            hue = (self.color_cycle + idx * 0.05) % 1.0
+            brightness = 0.8 + 0.2 * random.random()
+            r, g, b = colorsys.hsv_to_rgb(hue, 1.0, brightness)
+            color = (int(r * 255), int(g * 255), int(b * 255))
+            pygame.draw.circle(
+                self.screen, color, segment.center, segment.width // 2
+            )
+
         # 머리 그리기 (마지막에 그려서 항상 보이게 함)
         self.screen.blit(self.image, self.rect)
