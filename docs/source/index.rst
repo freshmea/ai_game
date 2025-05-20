@@ -16,6 +16,7 @@ ai_game 문서에 오신것을 환영 합니다.
 
    readme
    game
+   background
    modules
 
 
